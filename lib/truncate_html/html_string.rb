@@ -2,7 +2,7 @@
 module TruncateHtml
   class HtmlString < String
 
-    UNPAIRED_TAGS = %w(br hr img).freeze
+    UNPAIRED_TAGS = %w(br hr img pre).freeze
 
     def initialize(original_html)
       super(original_html)
@@ -12,8 +12,8 @@ module TruncateHtml
       scan(regex).map do |token|
         HtmlString.new(
           token.gsub(
-#            /\n/,'' #remove newline characters
-#          ).gsub(
+            /\n/,'' #remove newline characters
+          ).gsub(
             /\s+/, ' ' #clean out extra consecutive whitespace
           )
         )
