@@ -83,7 +83,7 @@ describe TruncateHtml::HtmlTruncator do
       This is ugly html.
       </div>
     END_HTML
-    truncate(html, :length => 12).should == ' <div id="foo" class="bar"> This is...</div>'
+    truncate(html, :length => 12).should == "      <div id=\"foo\"\n            class=\"bar\">...<div id=\"foo\"\n            class=\"bar\">"
   end
 
   %w(br hr img).each do |unpaired_tag|
@@ -124,4 +124,17 @@ describe TruncateHtml::HtmlTruncator do
     result.should include "<p>“我现在使用的是中文的拼音。”<br>"
   end
 
+  it 'does not truncate what is in <pre>' do
+    html = "<pre>“我现在使用的是中文的拼音。”<br>
+    测试一下具体的truncate<em>html功能。<br>
+    “我现在使用的是中文的拼音。”<br>
+    测试一下具体的truncate</em>html功能。<br>
+    “我现在使用的是中文的拼音。”<br>
+    测试一下具体的truncate<em>html功能。<br>
+    “我现在使用的是中文的拼音。”<br>
+    测试一下具体的truncate</em>html功能。</pre>"
+
+    result = truncate(html, :omission => "", :length => 50)
+    result.should include "<pre>“我现在使用的是中文的拼音。”<br>\n"
+  end
 end
